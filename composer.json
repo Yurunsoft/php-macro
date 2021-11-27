@@ -1,0 +1,34 @@
+{
+    "name": "yurunsoft/macro",
+    "type": "library",
+    "license": "MIT",
+    "description": "支持在 PHP 代码中使用类似 C/C++ 中的宏，进行代码预编译。可以方便兼容不同版本和环境下运行的 PHP 代码。",
+    "require": {
+        "php": ">=7.2",
+        "symfony/console": "^5.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.5",
+        "friendsofphp/php-cs-fixer": "^3.0.2",
+        "phpstan/phpstan": "^1.0.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Yurun\\Macro\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Yurun\\Macro\\Test\\": "tests/"
+        }
+    },
+    "prefer-stable": true,
+    "config": {
+        "sort-packages": true
+    },
+    "bin": [
+    ],
+    "scripts": {
+        "test": "phpunit -c ./phpunit.xml"
+    }
+}
