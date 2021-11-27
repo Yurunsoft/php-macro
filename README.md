@@ -16,6 +16,23 @@
 
 所有宏都要顶格编写，必须写在该行的开始位置
 
+#### 常量
+
+**宏：**`#define`、`#const`
+
+**例子：**
+
+```php
+#define IN_SWOOLE extension_loaded('swoole')
+#if IN_SWOOLE
+\Co\run(function(){
+    echo 'hello world';
+});
+#endif
+```
+
+> 注意：使用宏定义的常量，仅在生成代码时有效，运行时无效
+
 #### 条件语句
 
 **宏：**`#if`、`#else`、`#elif`、`#endif`

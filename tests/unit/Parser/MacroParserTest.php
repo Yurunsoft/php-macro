@@ -11,6 +11,8 @@ class MacroParserTest extends TestCase
 {
     public const CODE = <<<PHP
 <?php
+#define A 1
+#const B 2
 #if true
 success1(); #if true
 #elif 1
@@ -21,12 +23,19 @@ fail(); #if else
     #endif
 PHP;
 
-    public function testParse(): string
-    {
-        $this->assertEquals(
-<<<PHP
+    public const PARSE_RESULT = <<<PHP
 <?php echo '<?php'; ?>
 
+<?php
+(function(string \$name, \$value){
+    \Yurun\Macro\checkDefine(\$name, \$value) or define(\$name, \$value);
+})('A', 1);
+?>
+<?php
+(function(string \$name, \$value){
+    \Yurun\Macro\checkDefine(\$name, \$value) or define(\$name, \$value);
+})('B', 2);
+?>
 <?php if (true): ?>
 success1(); #if true
 <?php elseif (1): ?>
@@ -35,44 +44,31 @@ success2();
 fail(); #if else
 <?php endif; ?>
     #endif
-PHP,
-$result = MacroParser::parse(self::CODE)
-        );
+PHP;
 
-        return $result;
-    }
-
-    /**
-     * @depends testParse
-     */
-    public function testExecParsedCode(string $code): string
-    {
-        $this->assertEquals(
-<<<PHP
+    public const EXEC_RESULT = <<<PHP
 <?php
 success1(); #if true
     #endif
-PHP,
-$result = MacroParser::execParsedCode($code)
-        );
+PHP;
 
-        return $result;
-    }
-
-    /**
-     * @depends testExecParsedCode
-     */
-    public function testConvert(string $code): string
+    public function testParse(): void
     {
-        $this->assertEquals($code, MacroParser::convert(self::CODE));
-
-        return $code;
+        $this->assertEquals(self::PARSE_RESULT, MacroParser::parse(self::CODE));
     }
 
-    /**
-     * @depends testConvert
-     */
-    public function testConvertFile(string $code): void
+    public function testExecParsedCode(): void
+    {
+        $this->assertEquals(self::EXEC_RESULT, MacroParser::execParsedCode(self::PARSE_RESULT)
+        );
+    }
+
+    public function testConvert(): void
+    {
+        $this->assertEquals(self::EXEC_RESULT, MacroParser::convert(self::CODE));
+    }
+
+    public function testConvertFile(): void
     {
         if (is_dir('/run/shm'))
         {
@@ -89,7 +85,7 @@ $result = MacroParser::execParsedCode($code)
         $srcFile = $tmpPath . '/' . uniqid('', true);
         $destFile = $tmpPath . '/' . uniqid('', true);
         $this->assertNotFalse(file_put_contents($srcFile, self::CODE));
-        $this->assertEquals($code, MacroParser::convertFile($srcFile, $destFile));
-        $this->assertEquals($code, file_get_contents($destFile));
+        $this->assertEquals(self::EXEC_RESULT, MacroParser::convertFile($srcFile, $destFile));
+        $this->assertEquals(self::EXEC_RESULT, file_get_contents($destFile));
     }
 }

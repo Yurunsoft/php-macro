@@ -13,6 +13,7 @@ final class MacroParser
      */
     private static $parsers = [
         \Yurun\Macro\Parser\PhpTagParser::class,
+        \Yurun\Macro\Parser\ConstParser::class,
         \Yurun\Macro\Parser\IfParser::class,
     ];
 

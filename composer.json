@@ -15,7 +15,10 @@
     "autoload": {
         "psr-4": {
             "Yurun\\Macro\\": "src/"
-        }
+        },
+        "files": [
+            "src/functions.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
