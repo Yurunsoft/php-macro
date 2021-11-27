@@ -1,7 +1,7 @@
 # php-macro
 
 [![Latest Version](https://img.shields.io/packagist/v/yurunsoft/macro.svg)](https://packagist.org/packages/yurunsoft/macro)
-![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/yurunsoft/php-macro/ci/dev)
+![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/yurunsoft/php-macro/ci/master)
 [![Php Version](https://img.shields.io/badge/php-%3E=7.1-brightgreen.svg)](https://secure.php.net/)
 
 ## 介绍
@@ -23,7 +23,9 @@
 **例子：**
 
 ```php
+#ifndef IN_SWOOLE
 #define IN_SWOOLE extension_loaded('swoole')
+#endif
 #ifdef IN_SWOOLE
 #if IN_SWOOLE
 \Co\run(function(){
