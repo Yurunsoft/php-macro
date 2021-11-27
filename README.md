@@ -77,6 +77,44 @@ function test()
 }
 ```
 
+### MacroParser 方法
+
+类：`\Yurun\Macro\MacroParser`
+
+#### includeFile
+
+直接加载带有宏代码的文件，内部会自动预编译并加载最终的文件
+
+`MacroParser::includeFile(string $file): mixed`
+
+> 这个最为常用
+
+#### convert
+
+将带有宏的代码，转换为预编译后的 PHP 代码
+
+`MacroParser::parse(string $content): string`
+
+#### convertFile
+
+将带有宏代码的文件，转换为预编译后的 PHP 代码并保存到目标文件。
+
+方法返回值是预编译后的 PHP 代码。
+
+`MacroParser::convertFile(string $srcFile, string $destFile = ''): string`
+
+#### parse
+
+将带有宏的代码，编译成预编译的 PHP 代码
+
+`MacroParser::parse(string $content): string`
+
+#### execParsedCode
+
+执行预编译的 PHP 代码，返回预编译后的 PHP 代码
+
+`MacroParser::execParsedCode(string $code): string`
+
 ## 注意事项
 
 * 你的代码的 PHP 字符串中不能出现：`<?php`、`?>`。如果有可以拆开使用拼接的方式

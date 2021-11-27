@@ -88,4 +88,37 @@ PHP;
         $this->assertEquals(self::EXEC_RESULT, MacroParser::convertFile($srcFile, $destFile));
         $this->assertEquals(self::EXEC_RESULT, file_get_contents($destFile));
     }
+
+    public function includeFile(): void
+    {
+        if (is_dir('/run/shm'))
+        {
+            $tmpPath = '/run/shm';
+        }
+        elseif (is_dir('/tmp'))
+        {
+            $tmpPath = '/tmp';
+        }
+        else
+        {
+            $tmpPath = sys_get_temp_dir();
+        }
+        $fileName = $tmpPath . '/' . uniqid('', true);
+        $code = <<<PHP
+<?php
+if (\$a)
+{
+    return 1;
+}
+else
+{
+    return 0;
+}
+PHP;
+        file_put_contents($fileName, $code);
+        $a = 1;
+        $this->assertEquals(1, MacroParser::includeFile($fileName));
+        $a = 0;
+        $this->assertEquals(0, MacroParser::includeFile($fileName));
+    }
 }

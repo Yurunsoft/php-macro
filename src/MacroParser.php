@@ -79,6 +79,14 @@ final class MacroParser
     /**
      * @return mixed
      */
+    public static function includeFile(string $file)
+    {
+        return self::execPhpCode(self::convert($file));
+    }
+
+    /**
+     * @return mixed
+     */
     public static function execPhpCode(string $code, ?string $fileName = null, bool $deleteFile = true)
     {
         $tmpPath = &self::$tmpPath;
