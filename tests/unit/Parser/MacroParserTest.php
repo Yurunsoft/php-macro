@@ -11,8 +11,12 @@ class MacroParserTest extends TestCase
 {
     public const CODE = <<<PHP
 <?php
-#define A 1
-#const B 2
+#ifndef PI1
+#define PI1 3.14
+#endif
+#ifdef PI1
+#const PI2 3.14
+#endif
 #if true
 success1(); #if true
 #elif 1
@@ -26,16 +30,20 @@ PHP;
     public const PARSE_RESULT = <<<PHP
 <?php echo '<?php'; ?>
 
+<?php if (!defined('PI1')): ?>
 <?php
 (function(string \$name, \$value){
     \Yurun\Macro\checkDefine(\$name, \$value) or define(\$name, \$value);
-})('A', 1);
+})('PI1', 3.14);
 ?>
+<?php endif; ?>
+<?php if (defined('PI1')): ?>
 <?php
 (function(string \$name, \$value){
     \Yurun\Macro\checkDefine(\$name, \$value) or define(\$name, \$value);
-})('B', 2);
+})('PI2', 3.14);
 ?>
+<?php endif; ?>
 <?php if (true): ?>
 success1(); #if true
 <?php elseif (1): ?>

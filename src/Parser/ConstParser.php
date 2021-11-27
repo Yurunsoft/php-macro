@@ -10,7 +10,7 @@ class ConstParser implements IMacroParser
 {
     public function parse(string $content): string
     {
-        return preg_replace_callback('/^#(define|const)\s+(.+)\s+?(.+)$/mUS', function (array $matches) {
+        $resultContent = preg_replace_callback('/^#(define|const)\s+(.+)\s+?(.+)$/mUS', function (array $matches) {
             $name = var_export($matches[2], true);
 
             return <<<PHP
@@ -21,5 +21,12 @@ class ConstParser implements IMacroParser
 ?>
 PHP;
         }, $content);
+        $resultContent = preg_replace_callback('/^#if(n?)def\s+(.+)$/mUS', function (array $matches) {
+            $name = var_export($matches[2], true);
+
+            return '<?php if (' . ($matches[1] ? '!' : '') . 'defined(' . $name . ')): ?>';
+        }, $resultContent);
+
+        return $resultContent;
     }
 }

@@ -18,16 +18,18 @@
 
 #### 常量
 
-**宏：**`#define`、`#const`
+**宏：**`#define`、`#const`、`#ifdef`、`#ifndef`
 
 **例子：**
 
 ```php
 #define IN_SWOOLE extension_loaded('swoole')
+#ifdef IN_SWOOLE
 #if IN_SWOOLE
 \Co\run(function(){
     echo 'hello world';
 });
+#endif
 #endif
 ```
 
