@@ -84,6 +84,16 @@ final class MacroParser
         return self::execPhpCode(self::convert($file));
     }
 
+    public static function setTmpPath(string $tmpPath): void
+    {
+        self::$tmpPath = $tmpPath;
+    }
+
+    public static function getTmpPath(): string
+    {
+        return self::$tmpPath;
+    }
+
     /**
      * @return mixed
      */

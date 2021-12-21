@@ -85,6 +85,18 @@ function test()
 
 类：`\Yurun\Macro\MacroParser`
 
+#### setTmpPath
+
+设置生成 PHP 代码的临时目录
+
+`MacroParser::setTmpPath(string $tmpPath): void`
+
+#### getTmpPath
+
+获取生成 PHP 代码的临时目录
+
+`MacroParser::getTmpPath(): string`
+
 #### includeFile
 
 直接加载带有宏代码的文件，内部会自动预编译并加载最终的文件
