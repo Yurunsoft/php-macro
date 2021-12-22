@@ -126,7 +126,7 @@ final class MacroParser
         {
             try
             {
-                return require $fileName;
+                return includeFile($fileName);
             }
             finally
             {
@@ -135,7 +135,7 @@ final class MacroParser
         }
         else
         {
-            return require $fileName;
+            return includeFile($fileName);
         }
     }
 

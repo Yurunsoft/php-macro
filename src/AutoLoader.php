@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Yurun\Macro;
 
 use Composer\Autoload\ClassLoader;
-use function Composer\Autoload\includeFile;
 
 class AutoLoader
 {
@@ -37,7 +36,7 @@ class AutoLoader
             $fileName = $this->composerClassLoader->findFile($class);
             if (false === $fileName)
             {
-                return false;
+                return null;
             }
             if ($this->templateMode)
             {
@@ -45,13 +44,13 @@ class AutoLoader
                 if (is_file($macroFileName))
                 {
                     MacroParser::convertFile($macroFileName, $fileName);
+                    includeFile($fileName);
+
+                    return true;
                 }
-                includeFile($fileName);
             }
-            else
-            {
-                MacroParser::includeFile($fileName);
-            }
+
+            MacroParser::includeFile($fileName);
 
             return true;
         }

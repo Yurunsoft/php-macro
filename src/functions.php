@@ -26,3 +26,16 @@ function str_starts_with(?string $haystack, ?string $needle): bool
 {
     return 0 === strncmp($haystack, $needle, \strlen($needle));
 }
+
+/**
+ * Scope isolated include.
+ *
+ * Prevents access to $this/self from included files.
+ *
+ * @return mixed
+ * @private
+ */
+function includeFile(string $file)
+{
+    return include $file;
+}
