@@ -8,14 +8,30 @@ use Composer\Autoload\ClassLoader;
 
 class AutoLoader
 {
-    protected ClassLoader $composerClassLoader;
+    /**
+     * @var ClassLoader
+     */
+    protected $composerClassLoader;
 
-    protected bool $templateMode = false;
+    /**
+     * @var bool
+     */
+    protected $templateMode = false;
 
-    public function __construct(ClassLoader $composerClassLoader, bool $templateMode = false)
+    protected ?string $cacheDir = null;
+
+    public function __construct(ClassLoader $composerClassLoader, bool $templateMode = false, ?string $cacheDir = null)
     {
         $this->composerClassLoader = $composerClassLoader;
         $this->templateMode = $templateMode;
+        if (null !== $cacheDir)
+        {
+            if (\DIRECTORY_SEPARATOR !== substr($cacheDir, -1, 1))
+            {
+                $cacheDir .= \DIRECTORY_SEPARATOR;
+            }
+            $this->cacheDir = $cacheDir;
+        }
     }
 
     /**
@@ -50,7 +66,16 @@ class AutoLoader
                 }
             }
 
-            MacroParser::includeFile($fileName);
+            if (null === $this->cacheDir)
+            {
+                MacroParser::includeFile($fileName);
+            }
+            else
+            {
+                $destFile = $this->cacheDir . '/' . md5($fileName);
+                MacroParser::convertFile($fileName, $destFile);
+                includeFile($destFile);
+            }
 
             return true;
         }
