@@ -170,7 +170,7 @@ final class MacroParser
         }
     }
 
-    public static function hookComposer(bool $templateMode = false): void
+    public static function hookComposer(bool $templateMode = false, ?string $cacheDir = null): void
     {
         $autoLoaders = spl_autoload_functions();
 
@@ -180,7 +180,7 @@ final class MacroParser
             $unregisterAutoloader = $autoloader;
             if (\is_array($autoloader) && isset($autoloader[0]) && $autoloader[0] instanceof ClassLoader)
             {
-                $autoloader[0] = new AutoLoader($autoloader[0], $templateMode);
+                $autoloader[0] = new AutoLoader($autoloader[0], $templateMode, $cacheDir);
             }
             spl_autoload_unregister($unregisterAutoloader);
         }
