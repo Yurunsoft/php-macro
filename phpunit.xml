@@ -12,5 +12,8 @@
         <testsuite name="unit">
             <directory>tests/unit</directory>
         </testsuite>
+        <testsuite name="hook">
+            <directory>tests/hook</directory>
+        </testsuite>
     </testsuites>
 </phpunit>

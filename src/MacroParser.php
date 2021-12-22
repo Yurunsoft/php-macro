@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yurun\Macro;
 
+use Composer\Autoload\ClassLoader;
 use Yurun\Macro\Parser\Contract\IMacroParser;
 
 final class MacroParser
@@ -81,7 +82,7 @@ final class MacroParser
      */
     public static function includeFile(string $file)
     {
-        return self::execPhpCode(self::convert($file));
+        return self::execPhpCode(self::convertFile($file));
     }
 
     public static function setTmpPath(string $tmpPath): void
@@ -166,6 +167,30 @@ final class MacroParser
         else
         {
             self::$parsers = $parsers;
+        }
+    }
+
+    public static function hookComposer(bool $templateMode = false): void
+    {
+        $autoLoaders = spl_autoload_functions();
+
+        // Proxy the composer class loader
+        foreach ($autoLoaders as &$autoloader)
+        {
+            $unregisterAutoloader = $autoloader;
+            if (\is_array($autoloader) && isset($autoloader[0]) && $autoloader[0] instanceof ClassLoader)
+            {
+                $autoloader[0] = new AutoLoader($autoloader[0], $templateMode);
+            }
+            spl_autoload_unregister($unregisterAutoloader);
+        }
+
+        unset($autoloader);
+
+        // Re-register the loaders
+        foreach ($autoLoaders as $autoloader)
+        {
+            spl_autoload_register($autoloader);
         }
     }
 }

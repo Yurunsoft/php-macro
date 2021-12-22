@@ -21,7 +21,7 @@ success2();
 <?php else: ?>
 fail(); #if else
 <?php endif; ?>
-    #endif
+<?php endif; ?>
 PHP,
 $parser->parse(<<<PHP
 #if true

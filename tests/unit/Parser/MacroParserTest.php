@@ -12,7 +12,7 @@ class MacroParserTest extends TestCase
     public const CODE = <<<PHP
 <?php
 #ifndef PI1
-#define PI1 3.14
+    # define PI1 3.14
 #endif
 #ifdef PI1
 #const PI2 3.14
@@ -24,7 +24,6 @@ success2();
 #else
 fail(); #if else
 #endif
-    #endif
 PHP;
 
     public const PARSE_RESULT = <<<PHP
@@ -51,13 +50,12 @@ success2();
 <?php else: ?>
 fail(); #if else
 <?php endif; ?>
-    #endif
 PHP;
 
     public const EXEC_RESULT = <<<PHP
 <?php
 success1(); #if true
-    #endif
+
 PHP;
 
     public function testParse(): void

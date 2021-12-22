@@ -4,8 +4,7 @@
     "license": "MIT",
     "description": "支持在 PHP 代码中使用类似 C/C++ 中的宏，进行代码预编译。可以方便兼容不同版本和环境下运行的 PHP 代码。",
     "require": {
-        "php": ">=7.2",
-        "symfony/console": "^5.1"
+        "php": ">=7.2"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.5",
@@ -22,7 +21,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Yurun\\Macro\\Test\\": "tests/"
+            "Yurun\\Macro\\Test\\": "tests/",
+            "Macro\\Test\\": "tests/"
         }
     },
     "prefer-stable": true,

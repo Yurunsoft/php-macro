@@ -21,3 +21,8 @@ function checkDefine(string $name, $value): bool
 
     return false;
 }
+
+function str_starts_with(?string $haystack, ?string $needle): bool
+{
+    return 0 === strncmp($haystack, $needle, \strlen($needle));
+}

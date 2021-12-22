@@ -10,7 +10,7 @@ class ConstParser implements IMacroParser
 {
     public function parse(string $content): string
     {
-        $resultContent = preg_replace_callback('/^#(define|const)\s+(.+)\s+?(.+)$/mUS', function (array $matches) {
+        $resultContent = preg_replace_callback('/^\s*#\s*(define|const)\s+(.+)\s+?(.+)$/mUS', function (array $matches) {
             $name = var_export($matches[2], true);
 
             return <<<PHP

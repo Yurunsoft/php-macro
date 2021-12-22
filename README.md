@@ -14,8 +14,6 @@
 
 ### 支持的宏
 
-所有宏都要顶格编写，必须写在该行的开始位置
-
 #### 常量
 
 **宏：**`#define`、`#const`、`#ifdef`、`#ifndef`
@@ -24,7 +22,7 @@
 
 ```php
 #ifndef IN_SWOOLE
-#define IN_SWOOLE extension_loaded('swoole')
+    # define IN_SWOOLE extension_loaded('swoole')
 #endif
 #ifdef IN_SWOOLE
 #if IN_SWOOLE
