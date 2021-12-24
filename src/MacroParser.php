@@ -71,7 +71,7 @@ final class MacroParser
             {
                 mkdir($dir, 0777, true);
             }
-            file_put_contents($destFile, $destContent);
+            file_put_contents($destFile, $destContent, \LOCK_EX);
         }
 
         return $destContent;
