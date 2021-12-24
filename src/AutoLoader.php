@@ -72,7 +72,7 @@ class AutoLoader
             }
             else
             {
-                $destFile = $this->cacheDir . '/' . md5($fileName);
+                $destFile = $this->cacheDir . md5($fileName) . '.php';
                 MacroParser::convertFile($fileName, $destFile);
                 includeFile($destFile);
             }
