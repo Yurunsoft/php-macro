@@ -99,7 +99,7 @@ function test()
 
 直接加载带有宏代码的文件，内部会自动预编译并加载最终的文件
 
-`MacroParser::includeFile(string $file): mixed`
+`MacroParser::includeFile(string $file, string $destFile = '', bool $deleteFile = true): mixed`
 
 > 这个最为常用
 

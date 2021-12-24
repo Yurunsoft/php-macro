@@ -69,7 +69,7 @@ final class MacroParser
             $dir = \dirname($destFile);
             if (!is_dir($dir))
             {
-                mkdir($dir);
+                mkdir($dir, 0777, true);
             }
             file_put_contents($destFile, $destContent);
         }
@@ -80,9 +80,39 @@ final class MacroParser
     /**
      * @return mixed
      */
-    public static function includeFile(string $file)
+    public static function includeFile(string $file, string $destFile = '', bool $deleteFile = true)
     {
-        return self::execPhpCode(self::convertFile($file));
+        if ('' === $destFile)
+        {
+            return self::execPhpCode(self::convertFile($file), null, $deleteFile);
+        }
+        else
+        {
+            self::convertFile($file, $destFile);
+            $fp = fopen($destFile, 'r');
+            if (!$fp)
+            {
+                return;
+            }
+            try
+            {
+                if (!flock($fp, \LOCK_SH))
+                {
+                    return;
+                }
+
+                return includeFile($destFile);
+            }
+            finally
+            {
+                flock($fp, \LOCK_UN);
+                fclose($fp);
+                if ($deleteFile)
+                {
+                    unlink($destFile);
+                }
+            }
+        }
     }
 
     public static function setTmpPath(string $tmpPath): void
@@ -175,22 +205,22 @@ final class MacroParser
         $autoLoaders = spl_autoload_functions();
 
         // Proxy the composer class loader
-        foreach ($autoLoaders as &$autoloader)
+        foreach ($autoLoaders as &$autoLoader)
         {
-            $unregisterAutoloader = $autoloader;
-            if (\is_array($autoloader) && isset($autoloader[0]) && $autoloader[0] instanceof ClassLoader)
+            $unregisterAutoloader = $autoLoader;
+            if (\is_array($autoLoader) && isset($autoLoader[0]) && $autoLoader[0] instanceof ClassLoader)
             {
-                $autoloader[0] = new AutoLoader($autoloader[0], $templateMode, $cacheDir);
+                $autoLoader[0] = new AutoLoader($autoLoader[0], $templateMode, $cacheDir);
             }
             spl_autoload_unregister($unregisterAutoloader);
         }
 
-        unset($autoloader);
+        unset($autoLoader);
 
         // Re-register the loaders
-        foreach ($autoLoaders as $autoloader)
+        foreach ($autoLoaders as $autoLoader)
         {
-            spl_autoload_register($autoloader);
+            spl_autoload_register($autoLoader);
         }
     }
 }
