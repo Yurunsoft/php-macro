@@ -88,8 +88,8 @@ PHP;
         {
             $tmpPath = sys_get_temp_dir();
         }
-        $srcFile = $tmpPath . '/' . uniqid('', true);
-        $destFile = $tmpPath . '/' . uniqid('', true);
+        $srcFile = $tmpPath . \DIRECTORY_SEPARATOR . uniqid('', true);
+        $destFile = $tmpPath . \DIRECTORY_SEPARATOR . uniqid('', true);
         $this->assertNotFalse(file_put_contents($srcFile, self::CODE));
         $this->assertEquals(self::EXEC_RESULT, MacroParser::convertFile($srcFile, $destFile));
         $this->assertEquals(self::EXEC_RESULT, file_get_contents($destFile));
@@ -109,7 +109,7 @@ PHP;
         {
             $tmpPath = sys_get_temp_dir();
         }
-        $fileName = $tmpPath . '/' . uniqid('', true);
+        $fileName = $tmpPath . \DIRECTORY_SEPARATOR . uniqid('', true);
         $code = <<<PHP
 <?php
 if (\$a)

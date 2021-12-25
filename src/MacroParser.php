@@ -96,10 +96,7 @@ final class MacroParser
             }
             try
             {
-                if (!flock($fp, \LOCK_SH))
-                {
-                    return;
-                }
+                flock($fp, \LOCK_SH);
 
                 return includeFile($destFile);
             }
@@ -148,7 +145,7 @@ final class MacroParser
         }
         if (null === $fileName)
         {
-            $fileName = $tmpPath . '/' . getmypid() . '-' . uniqid('', true) . '.php';
+            $fileName = $tmpPath . \DIRECTORY_SEPARATOR . getmypid() . '-' . uniqid('', true) . '.php';
         }
 
         file_put_contents($fileName, $code);
