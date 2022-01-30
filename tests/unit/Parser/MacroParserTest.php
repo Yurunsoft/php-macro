@@ -93,6 +93,12 @@ PHP;
         $this->assertNotFalse(file_put_contents($srcFile, self::CODE));
         $this->assertEquals(self::EXEC_RESULT, MacroParser::convertFile($srcFile, $destFile));
         $this->assertEquals(self::EXEC_RESULT, file_get_contents($destFile));
+
+        $destFile = $tmpPath . \DIRECTORY_SEPARATOR . uniqid('', true);
+        $fp = fopen($destFile, 'w+');
+        $this->assertEquals(self::EXEC_RESULT, MacroParser::convertFile($srcFile, $fp));
+        fclose($fp);
+        $this->assertEquals(self::EXEC_RESULT, file_get_contents($destFile));
     }
 
     public function includeFile(): void

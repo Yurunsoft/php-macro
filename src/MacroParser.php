@@ -60,11 +60,18 @@ final class MacroParser
         return self::execParsedCode($parsedCode);
     }
 
-    public static function convertFile(string $srcFile, string $destFile = ''): string
+    /**
+     * @param string|resource $destFile
+     */
+    public static function convertFile(string $srcFile, $destFile = ''): string
     {
         $srcContent = file_get_contents($srcFile);
         $destContent = self::convert($srcContent);
-        if ('' !== $destFile)
+        if (\is_resource($destFile))
+        {
+            fwrite($destFile, $destContent);
+        }
+        elseif ('' !== $destFile)
         {
             $dir = \dirname($destFile);
             if (!is_dir($dir))
@@ -88,25 +95,27 @@ final class MacroParser
         }
         else
         {
-            self::convertFile($file, $destFile);
-            $fp = fopen($destFile, 'r');
-            if (!$fp)
-            {
-                return;
-            }
+            $fp = fopen($destFile, 'w+');
             try
             {
-                flock($fp, \LOCK_SH);
+                if (!$fp || !flock($fp, \LOCK_EX))
+                {
+                    return;
+                }
+                self::convertFile($file, $fp);
 
                 return includeFile($destFile);
             }
             finally
             {
-                flock($fp, \LOCK_UN);
-                fclose($fp);
-                if ($deleteFile)
+                if ($fp)
                 {
-                    unlink($destFile);
+                    flock($fp, \LOCK_UN);
+                    fclose($fp);
+                    if ($deleteFile)
+                    {
+                        unlink($destFile);
+                    }
                 }
             }
         }
