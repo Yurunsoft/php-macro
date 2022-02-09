@@ -123,7 +123,7 @@ final class MacroParser
             }
             else
             {
-                $lockFileName = tempnam($lockFileDir, 'imi.macro.');
+                $lockFileName = $lockFileDir . '/' . md5($destFile);
                 $fp = fopen($lockFileName, 'w+');
                 try
                 {
@@ -141,7 +141,10 @@ final class MacroParser
                     {
                         flock($fp, \LOCK_UN);
                         fclose($fp);
-                        unlink($lockFileName);
+                        if (is_file($lockFileName))
+                        {
+                            unlink($lockFileName);
+                        }
                         if ($deleteFile)
                         {
                             unlink($destFile);
