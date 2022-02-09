@@ -87,7 +87,7 @@ final class MacroParser
     /**
      * @return mixed
      */
-    public static function includeFile(string $file, string $destFile = '', bool $deleteFile = true)
+    public static function includeFile(string $file, string $destFile = '', bool $deleteFile = true, string $lockFileDir = '')
     {
         if ('' === $destFile)
         {
@@ -95,26 +95,57 @@ final class MacroParser
         }
         else
         {
-            $fp = fopen($destFile, 'w+');
-            try
+            if ('' === $lockFileDir)
             {
-                if (!$fp || !flock($fp, \LOCK_EX))
+                $fp = fopen($destFile, 'w+');
+                try
                 {
-                    return;
-                }
-                self::convertFile($file, $fp);
-
-                return includeFile($destFile);
-            }
-            finally
-            {
-                if ($fp)
-                {
-                    flock($fp, \LOCK_UN);
-                    fclose($fp);
-                    if ($deleteFile)
+                    if (!$fp || !flock($fp, \LOCK_EX))
                     {
-                        unlink($destFile);
+                        return;
+                    }
+                    self::convertFile($file, $fp);
+
+                    return includeFile($destFile);
+                }
+                finally
+                {
+                    if ($fp)
+                    {
+                        flock($fp, \LOCK_UN);
+                        fclose($fp);
+                        if ($deleteFile)
+                        {
+                            unlink($destFile);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                $lockFileName = tempnam($lockFileDir, 'imi.macro.');
+                $fp = fopen($lockFileName, 'w+');
+                try
+                {
+                    if (!$fp || !flock($fp, \LOCK_EX))
+                    {
+                        return;
+                    }
+                    self::convertFile($file, $destFile);
+
+                    return includeFile($destFile);
+                }
+                finally
+                {
+                    if ($fp)
+                    {
+                        flock($fp, \LOCK_UN);
+                        fclose($fp);
+                        unlink($lockFileName);
+                        if ($deleteFile)
+                        {
+                            unlink($destFile);
+                        }
                     }
                 }
             }
@@ -139,22 +170,29 @@ final class MacroParser
         $tmpPath = &self::$tmpPath;
         if ('' === $tmpPath)
         {
-            if (is_dir('/run/shm'))
+            if (\PHP_OS_FAMILY === 'Windows')
             {
-                $tmpPath = '/run/shm';
-            }
-            elseif (is_dir('/tmp'))
-            {
-                $tmpPath = '/tmp';
+                $tmpPath = sys_get_temp_dir();
             }
             else
             {
-                $tmpPath = sys_get_temp_dir();
+                if (is_dir('/run/shm'))
+                {
+                    $tmpPath = '/run/shm';
+                }
+                elseif (is_dir('/tmp'))
+                {
+                    $tmpPath = '/tmp';
+                }
+                else
+                {
+                    $tmpPath = sys_get_temp_dir();
+                }
             }
         }
         if (null === $fileName)
         {
-            $fileName = $tmpPath . \DIRECTORY_SEPARATOR . getmypid() . '-' . uniqid('', true) . '.php';
+            $fileName = tempnam($tmpPath, 'imi.macro.');
         }
 
         file_put_contents($fileName, $code);

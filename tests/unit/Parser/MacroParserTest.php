@@ -130,7 +130,9 @@ PHP;
         file_put_contents($fileName, $code);
         $a = 1;
         $this->assertEquals(1, MacroParser::includeFile($fileName));
+        $this->assertEquals(1, MacroParser::includeFile($fileName, '', true, '/tmp'));
         $a = 0;
         $this->assertEquals(0, MacroParser::includeFile($fileName));
+        $this->assertEquals(0, MacroParser::includeFile($fileName, '', true, '/tmp'));
     }
 }
