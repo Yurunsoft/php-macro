@@ -141,10 +141,6 @@ final class MacroParser
                     {
                         flock($fp, \LOCK_UN);
                         fclose($fp);
-                        if (is_file($lockFileName))
-                        {
-                            unlink($lockFileName);
-                        }
                         if ($deleteFile)
                         {
                             unlink($destFile);
