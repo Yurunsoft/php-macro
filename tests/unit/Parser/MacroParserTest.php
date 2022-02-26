@@ -95,7 +95,7 @@ PHP;
         $this->assertEquals(self::EXEC_RESULT, file_get_contents($destFile));
 
         $destFile = $tmpPath . \DIRECTORY_SEPARATOR . uniqid('', true);
-        $fp = fopen($destFile, 'w+');
+        $fp = fopen($destFile, 'c+');
         $this->assertEquals(self::EXEC_RESULT, MacroParser::convertFile($srcFile, $fp));
         fclose($fp);
         $this->assertEquals(self::EXEC_RESULT, file_get_contents($destFile));

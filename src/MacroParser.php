@@ -97,7 +97,7 @@ final class MacroParser
         {
             if ('' === $lockFileDir)
             {
-                $fp = fopen($destFile, 'w+');
+                $fp = fopen($destFile, 'c+');
                 try
                 {
                     if (!$fp || !flock($fp, \LOCK_EX))
@@ -124,7 +124,7 @@ final class MacroParser
             else
             {
                 $lockFileName = $lockFileDir . '/' . md5($destFile);
-                $fp = fopen($lockFileName, 'w+');
+                $fp = fopen($lockFileName, 'c+');
                 try
                 {
                     if (!$fp || !flock($fp, \LOCK_EX))
