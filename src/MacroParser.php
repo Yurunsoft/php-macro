@@ -104,6 +104,7 @@ final class MacroParser
                     {
                         return;
                     }
+                    ftruncate($fp, 0);
                     self::convertFile($file, $fp);
 
                     return includeFile($destFile);
@@ -131,6 +132,7 @@ final class MacroParser
                     {
                         return;
                     }
+                    ftruncate($fp, 0);
                     self::convertFile($file, $destFile);
 
                     return includeFile($destFile);
