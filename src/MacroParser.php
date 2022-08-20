@@ -107,6 +107,18 @@ final class MacroParser
                     ftruncate($fp, 0);
                     self::convertFile($file, $fp);
 
+                    if ('Windows' === \PHP_OS_FAMILY)
+                    {
+                        $fpShareLock = fopen($destFile, 'r');
+                        if ($fpShareLock)
+                        {
+                            flock($fp, \LOCK_UN);
+                            fclose($fp);
+                            $fp = null;
+                            flock($fpShareLock, \LOCK_SH);
+                        }
+                    }
+
                     return includeFile($destFile);
                 }
                 finally
@@ -115,10 +127,15 @@ final class MacroParser
                     {
                         flock($fp, \LOCK_UN);
                         fclose($fp);
-                        if ($deleteFile)
-                        {
-                            unlink($destFile);
-                        }
+                    }
+                    if ($deleteFile && is_file($destFile))
+                    {
+                        unlink($destFile);
+                    }
+                    if ($fpShareLock ?? false)
+                    {
+                        flock($fpShareLock, \LOCK_UN);
+                        fclose($fpShareLock);
                     }
                 }
             }
