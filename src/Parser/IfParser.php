@@ -11,10 +11,10 @@ class IfParser implements IMacroParser
     public function parse(string $content): string
     {
         $resultContent = $content;
-        $resultContent = preg_replace('/^\s*#\s*if\s+(.+)$/mUS', '<?php if ($1): ?>', $resultContent);
-        $resultContent = preg_replace('/^\s*#\s*else$/mUS', '<?php else: ?>', $resultContent);
-        $resultContent = preg_replace('/^\s*#\s*elif\s+(.+)/mUS', '<?php elseif ($1): ?>', $resultContent);
-        $resultContent = preg_replace('/^\s*#\s*endif$/mUS', '<?php endif; ?>', $resultContent);
+        $resultContent = preg_replace('/^(\s*)#\s*if\s+(.+)$/mUS', '$1<?php if ($2): ?>', $resultContent);
+        $resultContent = preg_replace('/^(\s*)#\s*else$/mUS', '$1<?php else: ?>', $resultContent);
+        $resultContent = preg_replace('/^(\s*)#\s*elif\s+(.+)/mUS', '$1<?php elseif ($2): ?>', $resultContent);
+        $resultContent = preg_replace('/^(\s*)#\s*endif$/mUS', '$1<?php endif; ?>', $resultContent);
 
         return $resultContent;
     }

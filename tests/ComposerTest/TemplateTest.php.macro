@@ -8,10 +8,10 @@ class TemplateTest
 {
     public static function a(): bool
     {
-        #if version_compare(PHP_VERSION, '8.0', '>=')
+#if version_compare(PHP_VERSION, '8.0', '>=')
         return true;
-        #else
+#else
         return false;
-        #endif
+#endif
     }
 }
